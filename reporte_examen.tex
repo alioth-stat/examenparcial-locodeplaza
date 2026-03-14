@@ -1,7 +1,7 @@
 \documentclass[fleqn,10pt]{SelfArx}
 
 \usepackage[spanish]{babel}
-\usepackage{float}
+\usepackage{stfloats}
 
 \setlength{\columnsep}{0.55cm}
 \setlength{\fboxrule}{0.75pt}
@@ -30,8 +30,8 @@
 
 \PaperTitle{Examen Parcial No.1: Redes Neuronales Aplicadas a Problemas de Ingenier\'ia}
 
-\Authors{Alioth Polo\textsuperscript{1} -- C\'edula: 8-1034-398}
-\affiliation{\textsuperscript{1}\textit{Estudiante de Inteligencia Artificial, D-IA-3\_1, ITSE}}
+\Authors{Alioth Polo\textsuperscript{1} -- C\'edula: 8-1034-398 \\ Martin Bundy\textsuperscript{1} -- C\'edula: 8-954-1319 \\ Nicole Ocque\textsuperscript{1} -- C\'edula: E-8-213033}
+\affiliation{\textsuperscript{1}\textit{Estudiantes de Inteligencia Artificial, D-IA-3\_1, ITSE}}
 \affiliation{\textbf{Profesor}: Dr. Sergio Enrique Pinto}
 
 \Keywords{Redes Neuronales --- TensorFlow --- Keras --- Gemelo Digital --- Proyectiles --- Aproximaci\'on de Funciones}
@@ -53,7 +53,9 @@
 
 \thispagestyle{empty}
 
-%----------------------------------------------------------------------------------------
+%========================================================================================
+%	INTRODUCCION
+%========================================================================================
 
 \section*{Introducci\'on}
 \addcontentsline{toc}{section}{Introducci\'on}
@@ -62,7 +64,9 @@ Las redes neuronales artificiales han demostrado ser herramientas poderosas para
 
 En el presente examen parcial se aplican redes neuronales tipo Perceptr\'on Multicapa (MLP), implementadas con TensorFlow \cite{tensorflow2015} y Keras \cite{keras2015}, para resolver cuatro problemas de ingenier\'ia: descarga de bater\'ias, intersecci\'on de curvas, colisi\'on de proyectiles y modelado de sensores de presi\'on. En todos los casos se utiliza el optimizador Adam \cite{kingma2014} y la funci\'on de p\'erdida MSE (Error Cuadr\'atico Medio).
 
-%----------------------------------------------------------------------------------------
+%========================================================================================
+%	PROBLEMA 1
+%========================================================================================
 
 \section{Problema 1: Descarga de Bater\'ia (20 Puntos)}
 
@@ -72,13 +76,12 @@ Se desarrollaron redes neuronales para modelar la curva de descarga de voltaje d
 
 Se dispone de 11 puntos de medici\'on para cada temperatura, con el tiempo de descarga variando de 0 a 20 minutos. La Tabla~\ref{tab:bateria} muestra los datos utilizados.
 
-\begin{table}[H]
+\begin{table*}[!htbp]
 	\caption{Datos de voltaje de descarga (V) por temperatura}
 	\centering
-	\small
 	\begin{tabular}{ccccc}
 		\toprule
-		t (min) & 25\textdegree C & 10\textdegree C & 0\textdegree C & $-$10\textdegree C \\
+		Tiempo (min) & 25\textdegree C & 10\textdegree C & 0\textdegree C & $-$10\textdegree C \\
 		\midrule
 		0  & 4.20 & 3.75 & 3.50 & 3.20 \\
 		2  & 4.05 & 3.70 & 3.55 & 3.30 \\
@@ -94,7 +97,7 @@ Se dispone de 11 puntos de medici\'on para cada temperatura, con el tiempo de de
 		\bottomrule
 	\end{tabular}
 	\label{tab:bateria}
-\end{table}
+\end{table*}
 
 \subsection{Arquitectura de la Red}
 
@@ -111,85 +114,101 @@ Se utiliz\'o el optimizador Adam con tasa de aprendizaje 0.01, funci\'on de p\'e
 
 \subsection{Resultados}
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_1_todas_redes.png}
-	\caption{Todas las redes neuronales de descarga de bater\'ia por temperatura. Los puntos representan los datos reales y las l\'ineas punteadas las predicciones de las redes neuronales.}
+La Figura~\ref{fig:p1_todas} muestra las cuatro redes neuronales graficadas conjuntamente. Cada red captura correctamente la tendencia de descarga para su temperatura correspondiente. Se observa que a mayor temperatura, mayor es el voltaje inicial y la pendiente de descarga es m\'as pronunciada.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_1_todas_redes.png}
+	\caption{Todas las redes neuronales de descarga de bater\'ia graficadas conjuntamente. Los puntos representan los datos reales de medici\'on y las l\'ineas punteadas las predicciones generadas por cada red neuronal entrenada. Se muestran las cuatro temperaturas: 25\textdegree C (rojo), 10\textdegree C (azul), 0\textdegree C (naranja) y $-$10\textdegree C (verde).}
 	\label{fig:p1_todas}
 \end{figure*}
 
-La Figura~\ref{fig:p1_todas} muestra las cuatro redes neuronales graficadas conjuntamente. Cada red captura correctamente la tendencia de descarga para su temperatura correspondiente.
+En la Figura~\ref{fig:p1_individual} se presenta el ajuste individual de cada red neuronal. Se puede apreciar c\'omo cada modelo se adapta fielmente a los datos de su temperatura correspondiente, capturando tanto las tendencias generales como las particularidades de cada curva de descarga.
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_1_individual.png}
-	\caption{Ajuste individual de cada red neuronal por temperatura.}
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_1_individual.png}
+	\caption{Ajuste individual de cada red neuronal por temperatura. Cada subgr\'afica muestra los datos reales (puntos) junto con la predicci\'on de la red neuronal (l\'inea punteada) para una temperatura espec\'ifica. Se observa un excelente ajuste en las cuatro condiciones t\'ermicas.}
 	\label{fig:p1_individual}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_1_loss.png}
-	\caption{Curvas de entrenamiento (p\'erdida MSE) para cada temperatura.}
+La Figura~\ref{fig:p1_loss} presenta las curvas de entrenamiento para cada temperatura. La convergencia de la funci\'on de p\'erdida MSE demuestra que todas las redes alcanzaron un entrenamiento estable, con la p\'erdida decreciendo de manera consistente durante las \'epocas de entrenamiento.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_1_loss.png}
+	\caption{Curvas de entrenamiento (p\'erdida MSE en escala logar\'itmica) para cada temperatura. Las l\'ineas azules representan el error de entrenamiento y las naranjas el error de validaci\'on. La convergencia estable indica un entrenamiento exitoso sin sobreajuste.}
 	\label{fig:p1_loss}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_1_errores.png}
-	\caption{M\'etricas de error (MSE y MAE) por temperatura.}
+En la Figura~\ref{fig:p1_errores} se comparan las m\'etricas de error entre las cuatro temperaturas. Los valores de MSE y MAE son consistentemente bajos, confirmando la precisi\'on de los modelos entrenados.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.7\linewidth]{problema_1_errores.png}
+	\caption{Comparaci\'on de m\'etricas de error (MSE en V$^2$ y MAE en V) por temperatura. Los errores son uniformemente peque\~nos en las cuatro condiciones, lo que valida la capacidad de las redes neuronales para modelar el fen\'omeno de descarga.}
 	\label{fig:p1_errores}
-\end{figure}
+\end{figure*}
 
-%----------------------------------------------------------------------------------------
+%========================================================================================
+%	PROBLEMA 2
+%========================================================================================
 
 \section{Problema 2: Intersecci\'on de Curvas (30 Puntos)}
 
-Se desarrollaron redes neuronales para aproximar seis pares de curvas y determinar sus puntos de intersecci\'on.
+Se desarrollaron redes neuronales para aproximar seis pares de curvas y determinar sus puntos de intersecci\'on mediante m\'etodos num\'ericos.
 
 \subsection{Pares de Curvas}
 
 Los seis pares de funciones analizados son:
 
 \begin{enumerate}[noitemsep]
-	\item[a)] $y = x^2 - 2x + 1$ \quad y \quad $y = -x^2 + 5x - 2$
-	\item[b)] $y = x^2 + 1$ \quad y \quad $y = x + 1$
-	\item[c)] $y = x^2 - 3x + 1$ \quad y \quad $y = x + 1$
-	\item[d)] $y = 2 - x^2$ \quad y \quad $y = x^2$
-	\item[e)] $y = 2x - x^2$ \quad y \quad $y = x - 2$
-	\item[f)] $y = x^2 - 4$ \quad y \quad $y = 3x - x^2 + 1$
+	\item[a)] $f(x) = x^2 - 2x + 1$ \quad y \quad $g(x) = -x^2 + 5x - 2$
+	\item[b)] $f(x) = x^2 + 1$ \quad y \quad $g(x) = x + 1$
+	\item[c)] $f(x) = x^2 - 3x + 1$ \quad y \quad $g(x) = x + 1$
+	\item[d)] $f(x) = 2 - x^2$ \quad y \quad $g(x) = x^2$
+	\item[e)] $f(x) = 2x - x^2$ \quad y \quad $g(x) = x - 2$
+	\item[f)] $f(x) = x^2 - 4$ \quad y \quad $g(x) = 3x - x^2 + 1$
 \end{enumerate}
 
 \subsection{Arquitectura de la Red}
 
-Para cada funci\'on se entren\'o una red neuronal con:
+Para cada funci\'on se entren\'o una red neuronal independiente con:
 
 \begin{itemize}[noitemsep]
-	\item Capa de entrada: 1 neurona ($x$ normalizado)
+	\item Capa de entrada: 1 neurona ($x$ normalizado en $[0, 1]$)
 	\item Capa oculta 1: 15 neuronas, activaci\'on ReLU
 	\item Capa oculta 2: 15 neuronas, activaci\'on ReLU
 	\item Capa de salida: 1 neurona, activaci\'on lineal
 \end{itemize}
 
-Se generaron 500 puntos sint\'eticos en el rango $[-5, 5]$, con Adam (lr=0.005), 1500 \'epocas y parada temprana. Los puntos de intersecci\'on se calcularon usando \texttt{scipy.optimize.fsolve}.
+Se generaron 500 puntos sint\'eticos en el rango $[-5, 5]$, con el optimizador Adam (lr=0.005), 1500 \'epocas m\'aximas y parada temprana. Los puntos de intersecci\'on se calcularon resolviendo $f(x) - g(x) = 0$ mediante \texttt{scipy.optimize.fsolve}.
 
 \subsection{Resultados}
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_2_incisos.png}
-	\caption{Aproximaci\'on por redes neuronales de los seis pares de curvas. Las l\'ineas s\'olidas son las funciones reales, las punteadas las predicciones de la red. Los marcadores verdes indican los puntos de intersecci\'on.}
+La Figura~\ref{fig:p2_incisos} muestra los resultados para cada par de curvas. En cada subgr\'afica se presentan las funciones reales (l\'ineas s\'olidas), las aproximaciones de las redes neuronales (l\'ineas punteadas) y los puntos de intersecci\'on encontrados (marcadores verdes).
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.95\linewidth]{problema_2_incisos.png}
+	\caption{Aproximaci\'on por redes neuronales de los seis pares de curvas (incisos a--f). Las l\'ineas s\'olidas representan las funciones reales $f(x)$ (azul) y $g(x)$ (rojo), mientras que las l\'ineas punteadas corresponden a las predicciones de las redes neuronales. Los marcadores verdes en forma de X indican los puntos de intersecci\'on calculados num\'ericamente.}
 	\label{fig:p2_incisos}
 \end{figure*}
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_2_todas_curvas.png}
-	\caption{Todas las curvas de los seis incisos graficadas en una sola imagen.}
+En la Figura~\ref{fig:p2_todas} se grafican todas las curvas de los seis incisos en una sola imagen, tal como lo requiere el enunciado del examen. Esta visualizaci\'on permite comparar las magnitudes y formas de todas las funciones simult\'aneamente.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_2_todas_curvas.png}
+	\caption{Todas las curvas de los seis incisos graficadas en una sola imagen. Se muestran las 12 funciones ($f(x)$ y $g(x)$ para cada par) con colores diferenciados, permitiendo una comparaci\'on visual global del comportamiento de todas las curvas analizadas.}
 	\label{fig:p2_todas}
 \end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_2_errores.png}
-	\caption{Error MSE por par de curvas para $f(x)$ y $g(x)$.}
-	\label{fig:p2_errores}
-\end{figure}
+La Figura~\ref{fig:p2_errores} presenta la comparaci\'on del error MSE entre los seis pares de curvas, tanto para $f(x)$ como para $g(x)$. Los errores son consistentemente bajos, lo que demuestra la capacidad de las redes neuronales para aproximar funciones polinomiales.
 
-%----------------------------------------------------------------------------------------
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.7\linewidth]{problema_2_errores.png}
+	\caption{Error MSE por par de curvas. Las barras azules representan el error de la red neuronal para $f(x)$ y las barras coral para $g(x)$. Se observa que todos los errores son muy peque\~nos, validando la precisi\'on de las aproximaciones.}
+	\label{fig:p2_errores}
+\end{figure*}
+
+%========================================================================================
+%	PROBLEMA 3
+%========================================================================================
 
 \section{Problema 3: Choque de Proyectiles (30 Puntos)}
 
@@ -225,68 +244,74 @@ Se entrenaron dos redes neuronales (una por proyectil) con arquitectura:
 	\item Capa de salida: 2 neuronas ($x$, $y$), activaci\'on lineal
 \end{itemize}
 
+Se utiliz\'o Adam (lr=0.005), MSE, 2000 \'epocas con parada temprana (paciencia de 200 \'epocas).
+
 \subsection{Resultados}
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_3_trayectorias.png}
-	\caption{Trayectorias de ambos proyectiles con el punto de colisi\'on marcado en verde.}
+La Figura~\ref{fig:p3_tray} muestra las trayectorias de ambos proyectiles en el plano $x$-$y$. El proyectil A parte desde la izquierda con una altura inicial de 10 m, mientras que el proyectil B parte desde $x = 150$ m al nivel del suelo. El punto de colisi\'on se marca con un marcador verde.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_3_trayectorias.png}
+	\caption{Trayectorias de ambos proyectiles en el plano $x$-$y$. El proyectil A (azul) parte desde $(0, 10)$ y el proyectil B (rojo) desde $(150, 0)$. El punto de colisi\'on se indica con un marcador verde en forma de X. La l\'inea punteada marr\'on representa el nivel del suelo.}
 	\label{fig:p3_tray}
 \end{figure*}
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_3_posiciones_tiempo.png}
-	\caption{Posiciones $x(t)$ e $y(t)$ de ambos proyectiles. La l\'inea vertical verde indica el tiempo de impacto.}
+En la Figura~\ref{fig:p3_pos} se presentan las posiciones $x(t)$ e $y(t)$ de ambos proyectiles en funci\'on del tiempo. La intersecci\'on de las curvas en ambas gr\'aficas al mismo instante confirma la colisi\'on.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_3_posiciones_tiempo.png}
+	\caption{Posiciones $x(t)$ (izquierda) e $y(t)$ (derecha) de ambos proyectiles en funci\'on del tiempo. La l\'inea vertical verde indica el instante de impacto. Se observa que ambas coordenadas coinciden en el mismo tiempo, confirmando la colisi\'on.}
 	\label{fig:p3_pos}
 \end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_3_distancia.png}
-	\caption{Distancia entre los proyectiles en funci\'on del tiempo. El m\'inimo corresponde al punto de colisi\'on.}
-	\label{fig:p3_dist}
-\end{figure}
+La Figura~\ref{fig:p3_dist} muestra la distancia euclidiana entre los dos proyectiles a lo largo del tiempo. El m\'inimo de esta curva (igual a cero) corresponde al instante exacto de la colisi\'on.
 
-\begin{figure*}[ht]\centering
-	\includegraphics[width=\linewidth]{problema_3_nn_vs_analitico.png}
-	\caption{Comparaci\'on entre las trayectorias anal\'iticas (s\'olidas) y las aproximaciones de las redes neuronales (punteadas).}
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.75\linewidth]{problema_3_distancia.png}
+	\caption{Distancia euclidiana entre los proyectiles en funci\'on del tiempo. La distancia parte del valor m\'aximo (separaci\'on inicial de 150 m) y decrece hasta cero en el instante de colisi\'on, marcado con el indicador verde.}
+	\label{fig:p3_dist}
+\end{figure*}
+
+La Figura~\ref{fig:p3_nn} compara las trayectorias obtenidas anal\'iticamente con las aproximaciones generadas por las redes neuronales. La superposici\'on casi perfecta de las curvas demuestra la alta precisi\'on de los modelos neuronales.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_3_nn_vs_analitico.png}
+	\caption{Comparaci\'on entre las trayectorias anal\'iticas (l\'ineas s\'olidas) y las aproximaciones de las redes neuronales (l\'ineas punteadas) para ambos proyectiles. La coincidencia entre ambas representaciones valida la capacidad de las redes neuronales para modelar trayectorias parab\'olicas.}
 	\label{fig:p3_nn}
 \end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_3_loss.png}
-	\caption{Curvas de entrenamiento para las redes neuronales de los proyectiles A y B.}
-	\label{fig:p3_loss}
-\end{figure}
+La Figura~\ref{fig:p3_loss} presenta las curvas de entrenamiento de las redes neuronales para ambos proyectiles. La r\'apida convergencia y la estabilidad del entrenamiento confirman un modelado exitoso.
 
-%----------------------------------------------------------------------------------------
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_3_loss.png}
+	\caption{Curvas de entrenamiento (p\'erdida MSE en escala logar\'itmica) para las redes neuronales de los proyectiles A (izquierda) y B (derecha). Las l\'ineas azules representan el error de entrenamiento y las naranjas el de validaci\'on.}
+	\label{fig:p3_loss}
+\end{figure*}
+
+%========================================================================================
+%	PROBLEMA 4
+%========================================================================================
 
 \section{Problema 4: Gemelo Digital de Sensor de Presi\'on (10 Puntos)}
 
-Se construy\'o un gemelo digital de un sensor de presi\'on utilizando datos de no-linealidad (\%) en funci\'on de la presi\'on (Bar) \cite{gemelo2021}.
+Se construy\'o un gemelo digital de un sensor de presi\'on utilizando datos de no-linealidad (\%) en funci\'on de la presi\'on (Bar) \cite{gemelo2021}. El gemelo digital permite simular el comportamiento del sensor sin necesidad del dispositivo f\'isico.
 
 \subsection{Datos del Sensor}
 
-\begin{table}[H]
-	\caption{No-linealidad (\%) del sensor vs presi\'on (Bar)}
+La Tabla~\ref{tab:sensor} muestra los 11 puntos de medici\'on del sensor, donde se observa un pico de no-linealidad positiva en 0.7 Bar y un valle negativo en 0.9 Bar.
+
+\begin{table*}[!htbp]
+	\caption{Datos de no-linealidad (\%) del sensor de presi\'on}
 	\centering
-	\begin{tabular}{cc}
+	\begin{tabular}{ccccccccccccc}
 		\toprule
-		Presi\'on (Bar) & No-Linealidad (\%) \\
+		Presi\'on (Bar) & 0.0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 & 1.0 \\
 		\midrule
-		0.0 & 0.00 \\
-		0.1 & 0.01 \\
-		0.2 & $-$0.02 \\
-		0.3 & $-$0.01 \\
-		0.4 & 0.02 \\
-		0.5 & 0.05 \\
-		0.6 & 0.09 \\
-		0.7 & 0.12 \\
-		0.8 & 0.06 \\
-		0.9 & $-$0.05 \\
-		1.0 & 0.00 \\
+		No-Linealidad (\%) & 0.00 & 0.01 & $-$0.02 & $-$0.01 & 0.02 & 0.05 & 0.09 & 0.12 & 0.06 & $-$0.05 & 0.00 \\
 		\bottomrule
 	\end{tabular}
 	\label{tab:sensor}
-\end{table}
+\end{table*}
 
 \subsection{Arquitectura de la Red}
 
@@ -297,44 +322,56 @@ Se construy\'o un gemelo digital de un sensor de presi\'on utilizando datos de n
 	\item Capa de salida: 1 neurona, activaci\'on lineal
 \end{itemize}
 
-Se utiliz\'o Adam (lr=0.01), MSE, 3000 \'epocas con batch\_size de 11.
+Se utiliz\'o la funci\'on de activaci\'on $\tanh$ en lugar de ReLU debido a que la se\~nal de no-linealidad oscila entre valores positivos y negativos, y $\tanh$ es m\'as adecuada para capturar este tipo de comportamiento. Se entren\'o con Adam (lr=0.01), MSE, 3000 \'epocas y batch\_size de 11.
 
 \subsection{Resultados}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_4_gemelo_digital.png}
-	\caption{Gemelo digital del sensor de presi\'on. Se destacan la m\'axima no-linealidad (0.7 Bar) y el valle negativo (0.9 Bar).}
+La Figura~\ref{fig:p4_gemelo} muestra el gemelo digital del sensor superpuesto con los datos reales. La curva suave generada por la red neuronal reproduce fielmente el patr\'on de no-linealidad, incluyendo el pico m\'aximo en 0.7 Bar y el valle en 0.9 Bar.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.85\linewidth]{problema_4_gemelo_digital.png}
+	\caption{Gemelo digital del sensor de presi\'on. Los puntos azules son los datos reales del sensor y la l\'inea roja la predicci\'on de la red neuronal. Se destacan con marcadores especiales la m\'axima no-linealidad en 0.7 Bar (estrella verde) y el valle negativo en 0.9 Bar (tri\'angulo naranja).}
 	\label{fig:p4_gemelo}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_4_error_barras.png}
-	\caption{Error absoluto del gemelo digital por punto de presi\'on.}
+La Figura~\ref{fig:p4_error} presenta el error absoluto del gemelo digital en cada punto de presi\'on. Los errores son extremadamente peque\~nos en todos los puntos, lo que confirma la alta fidelidad del modelo.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.7\linewidth]{problema_4_error_barras.png}
+	\caption{Error absoluto del gemelo digital por punto de presi\'on. Cada barra representa la diferencia absoluta entre el valor real y el predicho por la red neuronal. Los errores son consistentemente bajos a lo largo de todo el rango de presi\'on.}
 	\label{fig:p4_error}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_4_loss.png}
-	\caption{Curva de entrenamiento del gemelo digital.}
+La Figura~\ref{fig:p4_loss} muestra la curva de entrenamiento del gemelo digital. La p\'erdida MSE desciende r\'apidamente en las primeras \'epocas y contin\'ua mejorando gradualmente a lo largo de las 3000 \'epocas de entrenamiento.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.7\linewidth]{problema_4_loss.png}
+	\caption{Curva de entrenamiento del gemelo digital (p\'erdida MSE en escala logar\'itmica vs \'epoca). La convergencia suave y continua indica un entrenamiento estable sin oscilaciones ni sobreajuste.}
 	\label{fig:p4_loss}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[H]\centering
-	\includegraphics[width=\linewidth]{problema_4_residuos.png}
-	\caption{Residuos (predicho $-$ real) del gemelo digital.}
+La Figura~\ref{fig:p4_residuos} presenta el an\'alisis de residuos del gemelo digital. Los residuos se distribuyen alrededor de cero sin patrones sistem\'aticos, lo que indica que el modelo no presenta sesgos significativos.
+
+\begin{figure*}[!htbp]\centering
+	\includegraphics[width=0.7\linewidth]{problema_4_residuos.png}
+	\caption{Residuos del gemelo digital (predicho $-$ real) en funci\'on de la presi\'on. La l\'inea roja punteada indica el nivel cero. Los residuos peque\~nos y sin patr\'on sistem\'atico confirman la calidad del ajuste del modelo neuronal.}
 	\label{fig:p4_residuos}
-\end{figure}
+\end{figure*}
 
-%----------------------------------------------------------------------------------------
+%========================================================================================
+%	CONCLUSION
+%========================================================================================
 
 \section*{Conclusi\'on}
 \addcontentsline{toc}{section}{Conclusi\'on}
 
-En este examen parcial se demostr\'o la versatilidad de las redes neuronales tipo MLP para resolver diversos problemas de ingenier\'ia. En el Problema~1, las redes capturaron exitosamente las curvas de descarga de bater\'ia a cuatro temperaturas distintas. En el Problema~2, se lograron aproximar seis pares de curvas polinomiales y localizar con precisi\'on sus puntos de intersecci\'on. El Problema~3 mostr\'o c\'omo las redes neuronales pueden complementar soluciones anal\'iticas en problemas de cinem\'atica de proyectiles. Finalmente, el Problema~4 valid\'o el concepto de gemelo digital aplicado a sensores de presi\'on, reproduciendo fielmente el comportamiento de no-linealidad del sensor.
+En este examen parcial se demostr\'o la versatilidad de las redes neuronales tipo MLP para resolver diversos problemas de ingenier\'ia. En el Problema~1, las redes capturaron exitosamente las curvas de descarga de bater\'ia a cuatro temperaturas distintas, mostrando c\'omo la temperatura afecta el rendimiento de la bater\'ia. En el Problema~2, se lograron aproximar seis pares de curvas polinomiales y localizar con precisi\'on sus puntos de intersecci\'on mediante m\'etodos num\'ericos. El Problema~3 mostr\'o c\'omo las redes neuronales pueden complementar soluciones anal\'iticas en problemas de cinem\'atica de proyectiles, reproduciendo las trayectorias parab\'olicas con alta fidelidad. Finalmente, el Problema~4 valid\'o el concepto de gemelo digital aplicado a sensores de presi\'on, reproduciendo fielmente el comportamiento de no-linealidad del sensor.
 
 Los resultados confirman que, con una arquitectura adecuada y un proceso de entrenamiento bien configurado, las redes neuronales artificiales constituyen una herramienta eficaz para el modelado y la aproximaci\'on de sistemas f\'isicos e ingenieriles.
 
-%----------------------------------------------------------------------------------------
+%========================================================================================
+%	REFERENCIAS
+%========================================================================================
 
 \phantomsection
 \bibliographystyle{unsrt}
